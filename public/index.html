@@ -1190,40 +1190,48 @@ Children: ${child}`;
 
 
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        // Fetch blog posts from your backend API
-        const response = await fetch("http://localhost:5000/api/blogposts");
-        const posts = await response.json();
-        console.log("API returned:", posts); // Debug check
-        const blogMenu = document.getElementById("blog-menu");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const blogMenu = document.getElementById("blog-menu");
+      if (!blogMenu) {
+        console.error("Missing element with id='blog-menu'");
+        return;
+      }
+
+      const toursRef = ref(db, "tours/");
+
+      // ✅ Listen to changes in Firebase
+      onValue(toursRef, (snapshot) => {
+        const data = snapshot.val();
         blogMenu.innerHTML = "";
-        if (!posts || posts.length === 0) {
+
+        if (!data) {
           const li = document.createElement("li");
           li.textContent = "No blogs found";
           blogMenu.appendChild(li);
           return;
         }
-        // Loop through posts and create menu links
+
+        // Convert Firebase object → array
+        const posts = Object.entries(data).map(([id, post]) => ({ id, ...post }));
+
         posts.forEach((post, index) => {
           const li = document.createElement("li");
           const a = document.createElement("a");
-          // Use title if available, else fallback
+
           a.textContent = post.title ? post.title : `Blog ${index + 1}`;
-          a.href = `tourblog.html?id=${post._id || index + 1}`;
+          a.href = `tourblog.html?id=${post.id}`;
           li.appendChild(a);
           blogMenu.appendChild(li);
         });
-      } catch (err) {
-        console.error("Error fetching blogs:", err);
-        const blogMenu = document.getElementById("blog-menu");
-        if (blogMenu) {
-          blogMenu.innerHTML = "<li>Failed to load blogs</li>";
-        }
-      }
+      }, (error) => {
+        console.error("Error reading Firebase:", error);
+        blogMenu.innerHTML = "<li>Failed to load blogs</li>";
+      });
     });
   </script>
 
+<script type="module" src="toursMenu.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
@@ -1233,64 +1241,75 @@ Children: ${child}`;
         console.error("Dropdown or Tours container not found in HTML.");
         return;
       }
+
       try {
-        // Fetch all blog posts
-        const response = await fetch("http://localhost:5000/api/blogposts");
-        const allPosts = await response.json();
-        if (!Array.isArray(allPosts) || allPosts.length === 0) {
-          console.warn("No blog posts found.");
-          return;
-        }
-        // ✅ Clear existing content
-        dropdown.innerHTML = "";
-        toursContainer.innerHTML = "";
-        allPosts.forEach((post, index) => {
-          const id = index + 1;
-          const title = post.title || `Blog ${id}`;
-          const reserve = post.reserveName || "Tour Name";
-          const location = post.location || "Unknown Location";
-          const dateRange = post.dateRange || "";
-          const imgSrc = `img/tours/tour${id}.jpg`;
-          // ✅ Create dropdown link
-          const li = document.createElement("li");
-          li.innerHTML = `<a href="tourblog.html?id=${id}">${title}</a>`;
-          dropdown.appendChild(li);
-          // ✅ Create tour card
-          const div = document.createElement("div");
-          div.className = "single-destination relative";
-          div.innerHTML = `
-        <div class="thumb">
-          <img class="img-fluid" src="${imgSrc}" alt="${title}">
-        </div>
-        <div class="desc">
-          <h4>${reserve}</h4>
-          <p>${location}</p>
-          <p><strong>${dateRange}</strong></p>
-          <a href="tourblog.html?id=${id}" class="btn btn-primary mt-2">View Tour</a>
-        </div>
-      `;
-          toursContainer.appendChild(div);
-        });
-        // ✅ Initialize Owl Carousel after adding all cards
-        if (typeof $ !== "undefined" && $("#toursContainer").owlCarousel) {
-          $("#toursContainer").owlCarousel({
-            items: 3,
-            margin: 30,
-            autoplay: true,
-            loop: true,
-            nav: true,
-            dots: false,
-            responsive: {
-              0: { items: 1 },
-              768: { items: 2 },
-              992: { items: 3 }
-            }
+        const toursRef = ref(db, "tours/");
+        onValue(toursRef, (snapshot) => {
+          const data = snapshot.val();
+
+          // ✅ Clear old HTML
+          dropdown.innerHTML = "";
+          toursContainer.innerHTML = "";
+
+          if (!data) {
+            console.warn("No tours found.");
+            dropdown.innerHTML = "<li>No Tours Found</li>";
+            return;
+          }
+
+          const allTours = Object.entries(data); // [[key, tourObject], ...]
+
+          allTours.forEach(([key, tour], index) => {
+            const id = key;
+            const title = tour.title || `Tour ${index + 1}`;
+            const reserve = tour.reserveName || "Reserve Name";
+            const location = tour.location || "Unknown";
+            const dateRange = tour.dateRange || "";
+            const imgSrc = `img/tours/tour${index + 1}.jpg`;
+
+            // ✅ Add to dropdown
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="tourblog.html?id=${id}">${title}</a>`;
+            dropdown.appendChild(li);
+
+            // ✅ Add tour card
+            const div = document.createElement("div");
+            div.className = "single-destination relative";
+            div.innerHTML = `
+          <div class="thumb">
+            <img class="img-fluid" src="${imgSrc}" alt="${title}">
+          </div>
+          <div class="desc">
+            <h4>${reserve}</h4>
+            <p>${location}</p>
+            <p><strong>${dateRange}</strong></p>
+            <a href="tourblog.html?id=${id}" class="btn btn-primary mt-2">View Tour</a>
+          </div>
+        `;
+            toursContainer.appendChild(div);
           });
-        } else {
-          console.warn("OwlCarousel or jQuery not loaded.");
-        }
+
+          // ✅ Initialize Owl Carousel
+          if (typeof $ !== "undefined" && $("#toursContainer").owlCarousel) {
+            $("#toursContainer").owlCarousel({
+              items: 3,
+              margin: 30,
+              autoplay: true,
+              loop: true,
+              nav: true,
+              dots: false,
+              responsive: {
+                0: { items: 1 },
+                768: { items: 2 },
+                992: { items: 3 }
+              }
+            });
+          } else {
+            console.warn("OwlCarousel or jQuery not loaded.");
+          }
+        });
       } catch (err) {
-        console.error("Error fetching blog posts:", err);
+        console.error("Error fetching tours:", err);
       }
     });
   </script>
@@ -1298,14 +1317,13 @@ Children: ${child}`;
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    // ✅ Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyCubWp41GtwfaI3hc341PecYAKtPS69q98",
       authDomain: "jungle-hue.firebaseapp.com",
+      databaseURL: "https://jungle-hue-default-rtdb.firebaseio.com",
       projectId: "jungle-hue",
       storageBucket: "jungle-hue.firebasestorage.app",
       messagingSenderId: "281070360249",
@@ -1313,6 +1331,8 @@ Children: ${child}`;
       measurementId: "G-TBMB0R0ED6"
     };
 
+    // ✅ Initialize Firebase
+    const db = getDatabase(app);
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);

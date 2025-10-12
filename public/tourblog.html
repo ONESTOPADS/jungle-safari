@@ -68,7 +68,9 @@
 						<ul class="nav-menu">
 							<li><a href="index.html">Home</a></li>
 							<li><a href="about.html">About</a></li>
-							<li><a href="packages.html">Tours</a></li>
+							<li class="menu-has-children"><a href="#">Tours</a>
+								<ul id="blog-menu"></ul>
+							</li>
 							<li><a href="contact.html">Contact</a></li>
 							<li><a href="insurance.html">Jungle Podcast</a></li>
 							<li class="menu-has-children"><a href="">Blog</a>
@@ -85,7 +87,8 @@
 								</ul>
 							</li>
 						</ul>
-					</nav><!-- #nav-menu-container -->
+					</nav>
+					<!-- #nav-menu-container -->
 				</div>
 			</div>
 	</header><!-- #header -->
@@ -96,9 +99,9 @@
 		<div class="container">
 			<div class="row d-flex align-items-center justify-content-center">
 				<div class="about-content col-lg-12">
-					<h1 class="text-white">
+					<!-- <h1 class="text-white">
 						<h1 class="text-white" id="reserveHeading"></h1>
-					</h1>
+					</h1> -->
 					<p class="text-white link-nav"><a id="titleHeading"></a></p>
 					<p class="text-white link-nav"><a id="dateRangeText"></a></p>
 					<p class="text-white link-nav"><a id="locationText"></a></p>
@@ -117,7 +120,7 @@
 				</div>
 				<div class="col-lg-6 insurence-right">
 					<!-- <h6 class="text-uppercase">Need to know</h6> -->
-					<h1> Trip Itinerary: </h1>
+					<h1 id="reserveHeading"></h1>
 					<p>
 						Here, I focus on a range of items and features that we use in life without giving them a second
 						thought..
@@ -166,18 +169,14 @@
 					<div class="list-wrap">
 						<h6 class="text-uppercase">Package Includes: </h6>
 						<br>
-						<ul>
-							<li>Transport (Nagpur - Tadoba - Nagpur) </li>
-							<li>5 Safaris for thrilling wildlife encounters </li>
-							<li>Comfortable stay with all meals </li>
-							<li>Guide charges & forest entry fees\ </li>
+						<ul id="packageIncludes">
 						</ul>
 
 						<br>
 						<h6 class="text-uppercase">Exclusions: </h6>
 						<br>
 						<ul>
-							<li>Air/Rail fare, camera charges, extra meals, and personal expenses </li>
+							<li id="exclusions"></li>
 						</ul>
 
 					</div>
@@ -310,92 +309,7 @@
 	</footer>
 	<!-- End footer Area -->
 
-	<script>
-		async function loadSinglePost() {
-			try {
-				// ✅ Get the blog id from the URL (e.g., ?id=6)
-				const params = new URLSearchParams(window.location.search);
-				const blogId = params.get("id");
 
-				// ✅ Fetch all blog posts from the API
-				const response = await fetch("http://localhost:5000/api/blogposts");
-				const posts = await response.json();
-
-				// ✅ Convert id from string to number (since array index starts from 0)
-				const index = parseInt(blogId) - 1; // so ?id=1 → posts[0], ?id=6 → posts[5]
-
-				const post = posts[index];
-				if (!post) {
-					console.error("No post found for ID:", blogId);
-					return;
-				}
-
-				// ✅ Variables
-				const title = post.title;
-				const reserveName = post.reserveName;
-				const dateRange = post.dateRange;
-				const location = post.location;
-				const day1 = post.day1;
-				const day2 = post.day2;
-				const day3 = post.day3;
-				const day4 = post.day4;
-				const packageIncludes = post.packageIncludes;
-				const exclusions = post.exclusions;
-
-				// ✅ Inject into existing HTML
-				document.getElementById("reserveHeading").textContent = reserveName;
-				document.getElementById("titleHeading").textContent = title;
-				document.getElementById("dateRangeText").textContent = dateRange;
-				document.getElementById("locationText").textContent = location;
-
-				// ✅ Separate days
-				if (day1) {
-					document.getElementById("day1Block").innerHTML = `
-									<h4 class="text-white">Day 1</h4>
-									<ul class="text-white">${day1.map(d => `<li>${d}</li>`).join("")}</ul>
-									`;
-				}
-				if (day2) {
-					document.getElementById("day2Block").innerHTML = `
-									<h4 class="text-white">Day 2</h4>
-									<ul class="text-white">${day2.map(d => `<li>${d}</li>`).join("")}</ul>
-									`;
-				}
-				if (day3) {
-					document.getElementById("day3Block").innerHTML = `
-									<h4 class="text-white">Day 3</h4>
-									<ul class="text-white">${day3.map(d => `<li>${d}</li>`).join("")}</ul>
-									`;
-				}
-				if (day4) {
-					document.getElementById("day4Block").innerHTML = `
-									<h4 class="text-white">Day 4</h4>
-									<ul class="text-white">${day4.map(d => `<li>${d}</li>`).join("")}</ul>
-									`;
-				}
-
-				// ✅ Inject includes
-				document.getElementById("includes").innerHTML = `
-									<h4 class="text-white">Includes</h4>
-									<ul class="text-white">
-									${packageIncludes?.map(i => `<li>${i}</li>`).join("") || ""}
-									</ul>
-								`;
-
-				// ✅ Inject exclusions
-				document.getElementById("exclusions").innerHTML = `
-									<h4 class="text-white">Exclusions</h4>
-									<ul class="text-white">
-									${exclusions?.map(e => `<li>${e}</li>`).join("") || ""}
-									</ul>
-								`;
-			} catch (err) {
-				console.error("Error loading post", err);
-			}
-		}
-
-		loadSinglePost();
-	</script>
 
 
 	<script src="js/vendor/jquery-2.2.4.min.js"></script>
@@ -412,7 +326,13 @@
 	<script src="js/owl.carousel.min.js"></script>
 	<script src="js/mail-script.js"></script>
 	<script src="js/main.js"></script>
+	<script type="module" src="toursMenu.js"></script>
+	<script type="module" src="tour.js"></script>
 
+
+	<script>
+		
+	</script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
 			const params = new URLSearchParams(window.location.search);

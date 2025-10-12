@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Add Blog Post</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Tour Collection</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -73,17 +73,21 @@
       background: #0056b3;
     }
 
-    /* Mobile adjustments */
     @media (max-width: 600px) {
       form {
         grid-template-columns: 1fr;
       }
-      .full-width {
+      .full-width, button {
         grid-column: span 1;
       }
-      button {
-        grid-column: span 1;
-      }
+    }
+
+    .tour-list {
+      margin-top: 30px;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -136,35 +140,59 @@
 
       <button type="submit">Submit</button>
     </form>
+
+   
   </div>
 
-  <script>
-    document.getElementById('blogForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = {};
+  <script type="module">
+    // ✅ Import Firebase SDK (v10+)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCubWp41GtwfaI3hc341PecYAKtPS69q98",
+      authDomain: "jungle-hue.firebaseapp.com",
+      databaseURL: "https://jungle-hue-default-rtdb.firebaseio.com",
+      projectId: "jungle-hue",
+      storageBucket: "jungle-hue.firebasestorage.app",
+      messagingSenderId: "281070360249",
+      appId: "1:281070360249:web:2b9ce67d7af5b7415e2d68",
+      measurementId: "G-TBMB0R0ED6"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const form = document.getElementById('blogForm');
+    const toursList = document.getElementById('tourOutput');
+
+    // ✅ Handle Form Submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {};
       formData.forEach((val, key) => {
         if (["day1","day2","day3","day4","packageIncludes","exclusions"].includes(key)) {
-          data[key] = val.split(",").map(item => item.trim());
+          data[key] = val ? val.split(",").map(v => v.trim()) : [];
         } else {
-          data[key] = val;
+          data[key] = val.trim();
         }
       });
 
-      const response = await fetch('http://localhost:5000/api/blogposts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (response.ok) {
-        alert('Blog post saved!');
-        e.target.reset();
-      } else {
-        alert('Error saving blog post');
+      try {
+        await push(ref(db, 'tours/'), data);
+        alert('✅ Tour saved successfully!');
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        alert('❌ Failed to save tour.');
       }
-    }
+    });
+
+   
   </script>
 </body>
 </html>
