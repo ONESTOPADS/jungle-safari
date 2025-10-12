@@ -2,154 +2,590 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add Tour Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tour Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       padding: 20px;
-      display: flex;
-      justify-content: center;
     }
 
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 700px;
-      width: 100%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .cms-container {
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    .header {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 24px 32px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
     }
 
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 4px;
     }
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    .header p {
+      color: #718096;
       font-size: 14px;
     }
 
-    textarea {
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .form-panel {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 20px;
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .form-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .form-badge {
+      background: #667eea;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .form-badge.editing {
+      background: #f59e0b;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .required {
+      color: #ef4444;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
       resize: vertical;
+      min-height: 60px;
     }
 
-    .full-width {
+    .form-actions {
       grid-column: span 2;
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
     }
 
-    button {
-      grid-column: span 2;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #007bff;
-      color: #fff;
+    .btn {
+      flex: 1;
+      padding: 14px;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    button:hover {
-      background: #0056b3;
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
     }
 
-    @media (max-width: 600px) {
-      form {
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .tours-panel {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .tours-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .tours-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .tour-count {
+      background: #f0fdf4;
+      color: #16a34a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tour-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+
+    .tour-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .tour-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .tour-card-title {
+      flex: 1;
+    }
+
+    .tour-card-title h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 4px;
+    }
+
+    .tour-card-title p {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .tour-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+
+    .icon-btn.edit {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    .icon-btn.edit:hover {
+      background: #2563eb;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .icon-btn.delete {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .icon-btn.delete:hover {
+      background: #dc2626;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .tour-card-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .detail-icon {
+      width: 32px;
+      height: 32px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .detail-text {
+      flex: 1;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #64748b;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .modal-icon {
+      width: 48px;
+      height: 48px;
+      background: #fee2e2;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .modal-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .modal-body {
+      margin-bottom: 24px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    @media (max-width: 1200px) {
+      .main-grid {
         grid-template-columns: 1fr;
       }
-      .full-width, button {
-        grid-column: span 1;
+
+      .form-panel {
+        position: static;
       }
     }
 
-    .tour-list {
-      margin-top: 30px;
-      padding: 15px;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: span 1;
+      }
+
+      .form-actions {
+        grid-column: span 1;
+        flex-direction: column;
+      }
+
+      .tour-card-details {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Add New Tours Collection</h2>
-    <form id="blogForm">
-      <div>
-        <label>Title</label>
-        <input name="title" placeholder="Safari Trip" required>
-      </div>
-      <div>
-        <label>Reserve Name</label>
-        <input name="reserveName" placeholder="Kaziranga" required>
-      </div>
-      <div>
-        <label>Date Range</label>
-        <input name="dateRange" placeholder="2025-10-01 to 2025-10-05" required>
-      </div>
-      <div>
-        <label>Location</label>
-        <input name="location" placeholder="Assam, India" required>
+  <div class="cms-container">
+    <div class="header">
+      <h1>🌿 Tour Management System</h1>
+      <p>Manage your wildlife and nature tours with ease</p>
+    </div>
+
+    <div class="main-grid">
+      <div class="form-panel">
+        <div class="form-header">
+          <h2 id="formTitle">Add New Tour</h2>
+          <span class="form-badge" id="formBadge">NEW</span>
+        </div>
+        
+        <form id="tourForm">
+          <input type="hidden" id="editingId" value="">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Tour Title <span class="required">*</span></label>
+              <input name="title" placeholder="e.g., Safari Adventure" required>
+            </div>
+
+            <div class="form-group">
+              <label>Reserve Name <span class="required">*</span></label>
+              <input name="reserveName" placeholder="e.g., Kaziranga" required>
+            </div>
+
+            <div class="form-group">
+              <label>Location <span class="required">*</span></label>
+              <input name="location" placeholder="e.g., Assam, India" required>
+            </div>
+
+            <div class="form-group full">
+              <label>Date Range <span class="required">*</span></label>
+              <input name="dateRange" placeholder="e.g., 2025-10-01 to 2025-10-05" required>
+            </div>
+
+            <div class="form-group full">
+              <label>Day 1 Activities</label>
+              <input name="day1" placeholder="e.g., Arrival, Check-in, Welcome dinner">
+            </div>
+
+            <div class="form-group full">
+              <label>Day 2 Activities</label>
+              <input name="day2" placeholder="e.g., Morning safari, Wildlife photography">
+            </div>
+
+            <div class="form-group full">
+              <label>Day 3 Activities</label>
+              <input name="day3" placeholder="e.g., Boat ride, Bird watching">
+            </div>
+
+            <div class="form-group full">
+              <label>Day 4 Activities</label>
+              <input name="day4" placeholder="e.g., Departure, Return journey">
+            </div>
+
+            <div class="form-group full">
+              <label>Package Includes (comma separated)</label>
+              <input name="packageIncludes" placeholder="e.g., Accommodation, Meals, Guide">
+            </div>
+
+            <div class="form-group full">
+              <label>Exclusions (comma separated)</label>
+              <input name="exclusions" placeholder="e.g., Flights, Personal expenses">
+            </div>
+
+            <div class="form-group full">
+              <label>Image URL</label>
+              <input name="imageLink" type="url" placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span id="submitText">💾 Save Tour</span>
+              </button>
+              <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">
+                ✕ Cancel
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
-      <div class="full-width">
-        <label>Day 1 Activities</label>
-        <input name="day1" placeholder="Arrival, Check-in">
+      <div class="tours-panel">
+        <div class="tours-header">
+          <h2>All Tours</h2>
+          <span class="tour-count" id="tourCount">0 Tours</span>
+        </div>
+        <div id="toursList"></div>
       </div>
-      <div class="full-width">
-        <label>Day 2 Activities</label>
-        <input name="day2" placeholder="Morning Safari">
-      </div>
-      <div class="full-width">
-        <label>Day 3 Activities</label>
-        <input name="day3" placeholder="Boat Ride">
-      </div>
-      <div class="full-width">
-        <label>Day 4 Activities</label>
-        <input name="day4" placeholder="Return">
-      </div>
+    </div>
+  </div>
 
-      <div class="full-width">
-        <label>Package Includes (comma separated)</label>
-        <input name="packageIncludes" placeholder="Accommodation, Meals">
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon">⚠️</div>
+        <h3>Delete Tour</h3>
       </div>
-      <div class="full-width">
-        <label>Exclusions (comma separated)</label>
-        <input name="exclusions" placeholder="Flights">
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deleteTourName"></strong>? This action cannot be undone.</p>
       </div>
-
-      <button type="submit">Submit</button>
-    </form>
-
-   
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelDelete">Cancel</button>
+        <button class="btn btn-primary" id="confirmDelete" style="background: #dc2626;">Delete</button>
+      </div>
+    </div>
   </div>
 
   <script type="module">
-    // ✅ Import Firebase SDK (v10+)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
-    // ✅ Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyCubWp41GtwfaI3hc341PecYAKtPS69q98",
       authDomain: "jungle-hue.firebaseapp.com",
@@ -161,38 +597,196 @@
       measurementId: "G-TBMB0R0ED6"
     };
 
-    // ✅ Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const form = document.getElementById('blogForm');
-    const toursList = document.getElementById('tourOutput');
+    const form = document.getElementById('tourForm');
+    const toursList = document.getElementById('toursList');
+    const editingIdInput = document.getElementById('editingId');
+    const formTitle = document.getElementById('formTitle');
+    const formBadge = document.getElementById('formBadge');
+    const submitText = document.getElementById('submitText');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const tourCount = document.getElementById('tourCount');
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteTourName = document.getElementById('deleteTourName');
+    const confirmDelete = document.getElementById('confirmDelete');
+    const cancelDelete = document.getElementById('cancelDelete');
 
-    // ✅ Handle Form Submission
+    let deleteId = null;
+
+    // Load and display tours
+    const loadTours = () => {
+      const listRef = ref(db, 'tours/');
+      onValue(listRef, snapshot => {
+        const data = snapshot.val();
+        toursList.innerHTML = "";
+
+        if (data) {
+          const tours = Object.entries(data);
+          tourCount.textContent = `${tours.length} Tour${tours.length !== 1 ? 's' : ''}`;
+
+          tours.forEach(([id, tour]) => {
+            const card = document.createElement('div');
+            card.className = 'tour-card';
+            card.innerHTML = `
+              <div class="tour-card-header">
+                <div class="tour-card-title">
+                  <h3>${tour.title || 'Untitled Tour'}</h3>
+                  <p>${tour.reserveName || 'No reserve specified'}</p>
+                </div>
+                <div class="tour-card-actions">
+                  <button class="icon-btn edit" data-id="${id}" title="Edit">✏️</button>
+                  <button class="icon-btn delete" data-id="${id}" title="Delete">🗑️</button>
+                </div>
+              </div>
+              <div class="tour-card-details">
+                <div class="detail-item">
+                  <div class="detail-icon">📍</div>
+                  <div class="detail-text">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">${tour.location || 'Not specified'}</div>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-icon">📅</div>
+                  <div class="detail-text">
+                    <div class="detail-label">Date Range</div>
+                    <div class="detail-value">${tour.dateRange || 'Not specified'}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+            toursList.appendChild(card);
+          });
+
+          // Attach edit handlers
+          toursList.querySelectorAll('.edit').forEach(button => {
+            button.addEventListener('click', () => {
+              const id = button.dataset.id;
+              fillForm(id, data[id]);
+            });
+          });
+
+          // Attach delete handlers
+          toursList.querySelectorAll('.delete').forEach(button => {
+            button.addEventListener('click', () => {
+              const id = button.dataset.id;
+              deleteId = id;
+              deleteTourName.textContent = data[id].title || 'this tour';
+              deleteModal.classList.add('active');
+            });
+          });
+        } else {
+          tourCount.textContent = '0 Tours';
+          toursList.innerHTML = `
+            <div class="empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <h3>No tours yet</h3>
+              <p>Create your first tour using the form</p>
+            </div>
+          `;
+        }
+      });
+    };
+
+    // Fill form for editing
+    const fillForm = (id, tour) => {
+      editingIdInput.value = id;
+      formTitle.textContent = 'Edit Tour';
+      formBadge.textContent = 'EDITING';
+      formBadge.classList.add('editing');
+      submitText.textContent = '💾 Update Tour';
+      cancelBtn.style.display = 'block';
+
+      form.title.value = tour.title || '';
+      form.reserveName.value = tour.reserveName || '';
+      form.dateRange.value = tour.dateRange || '';
+      form.location.value = tour.location || '';
+      form.day1.value = (tour.day1 || []).join(', ');
+      form.day2.value = (tour.day2 || []).join(', ');
+      form.day3.value = (tour.day3 || []).join(', ');
+      form.day4.value = (tour.day4 || []).join(', ');
+      form.packageIncludes.value = (tour.packageIncludes || []).join(', ');
+      form.exclusions.value = (tour.exclusions || []).join(', ');
+      form.imageLink.value = tour.imageLink || '';
+
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // Reset form
+    const resetForm = () => {
+      form.reset();
+      editingIdInput.value = '';
+      formTitle.textContent = 'Add New Tour';
+      formBadge.textContent = 'NEW';
+      formBadge.classList.remove('editing');
+      submitText.textContent = '💾 Save Tour';
+      cancelBtn.style.display = 'none';
+    };
+
+    // Cancel button
+    cancelBtn.addEventListener('click', resetForm);
+
+    // Handle form submit
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
       const data = {};
+
       formData.forEach((val, key) => {
         if (["day1","day2","day3","day4","packageIncludes","exclusions"].includes(key)) {
-          data[key] = val ? val.split(",").map(v => v.trim()) : [];
+          data[key] = val ? val.split(",").map(v => v.trim()).filter(v => v) : [];
         } else {
           data[key] = val.trim();
         }
       });
 
+      const editingId = editingIdInput.value;
+
       try {
-        await push(ref(db, 'tours/'), data);
-        alert('✅ Tour saved successfully!');
-        form.reset();
+        if (editingId) {
+          await update(ref(db, `tours/${editingId}`), data);
+        } else {
+          await push(ref(db, 'tours/'), data);
+        }
+        resetForm();
       } catch (error) {
         console.error(error);
-        alert('❌ Failed to save tour.');
+        alert('❌ Failed to save tour. Please try again.');
       }
     });
 
-   
+    // Delete confirmation
+    confirmDelete.addEventListener('click', async () => {
+      if (deleteId) {
+        try {
+          await remove(ref(db, `tours/${deleteId}`));
+          deleteModal.classList.remove('active');
+          deleteId = null;
+        } catch (error) {
+          console.error(error);
+          alert('❌ Failed to delete tour. Please try again.');
+        }
+      }
+    });
+
+    cancelDelete.addEventListener('click', () => {
+      deleteModal.classList.remove('active');
+      deleteId = null;
+    });
+
+    // Close modal on outside click
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) {
+        deleteModal.classList.remove('active');
+        deleteId = null;
+      }
+    });
+
+    loadTours();
   </script>
 </body>
 </html>

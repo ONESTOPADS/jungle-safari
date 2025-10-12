@@ -20,6 +20,13 @@
   <!--
             CSS
             ============================================= -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+
   <link rel="stylesheet" href="css/linearicons.css">
   <link rel="stylesheet" href="css/font-awesome.min.css">
   <link rel="stylesheet" href="css/bootstrap.css">
@@ -245,20 +252,23 @@ Children: ${child}`;
   </section>
   <!-- End banner Area -->
   <section class="popular-destination-area section-gap">
-    <div class="container">
-      <div class="row d-flex justify-content-center">
-        <div class="menu-content pb-70 col-lg-8">
-          <div class="title text-center">
-            <h1 class="mb-10">Popular Tours</h1>
-            <p>Discover the most loved tours and destinations curated by Jungle Hues.</p>
-          </div>
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="menu-content pb-70 col-lg-8">
+        <div class="title text-center">
+          <h1 class="mb-10">Popular Tours</h1>
+          <p>Discover the most loved tours and destinations curated by Jungle Hues.</p>
         </div>
       </div>
-      <div class="owl-carousel" id="toursContainer">
-        <!-- Dynamic cards will appear here -->
-      </div>
     </div>
-  </section>
+
+    <!-- Owl Carousel wrapper -->
+    <div class="owl-carousel owl-theme" id="toursContainer">
+      <!-- Cards will be injected here -->
+    </div>
+  </div>
+</section>
+
 
 
 
@@ -1231,7 +1241,7 @@ Children: ${child}`;
     });
   </script>
 
-<script type="module" src="toursMenu.js"></script>
+  <script type="module" src="toursMenu.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
