@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Add Blog Post</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    button {
+      grid-column: span 2;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+      button {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Tours Collection</h2>
+    <form id="blogForm">
+      <div>
+        <label>Title</label>
+        <input name="title" placeholder="Safari Trip" required>
+      </div>
+      <div>
+        <label>Reserve Name</label>
+        <input name="reserveName" placeholder="Kaziranga" required>
+      </div>
+      <div>
+        <label>Date Range</label>
+        <input name="dateRange" placeholder="2025-10-01 to 2025-10-05" required>
+      </div>
+      <div>
+        <label>Location</label>
+        <input name="location" placeholder="Assam, India" required>
+      </div>
+
+      <div class="full-width">
+        <label>Day 1 Activities</label>
+        <input name="day1" placeholder="Arrival, Check-in">
+      </div>
+      <div class="full-width">
+        <label>Day 2 Activities</label>
+        <input name="day2" placeholder="Morning Safari">
+      </div>
+      <div class="full-width">
+        <label>Day 3 Activities</label>
+        <input name="day3" placeholder="Boat Ride">
+      </div>
+      <div class="full-width">
+        <label>Day 4 Activities</label>
+        <input name="day4" placeholder="Return">
+      </div>
+
+      <div class="full-width">
+        <label>Package Includes (comma separated)</label>
+        <input name="packageIncludes" placeholder="Accommodation, Meals">
+      </div>
+      <div class="full-width">
+        <label>Exclusions (comma separated)</label>
+        <input name="exclusions" placeholder="Flights">
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('blogForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {};
+
+      formData.forEach((val, key) => {
+        if (["day1","day2","day3","day4","packageIncludes","exclusions"].includes(key)) {
+          data[key] = val.split(",").map(item => item.trim());
+        } else {
+          data[key] = val;
+        }
+      });
+
+      const response = await fetch('http://localhost:5000/api/blogposts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert('Blog post saved!');
+        e.target.reset();
+      } else {
+        alert('Error saving blog post');
+      }
+    }
+  </script>
+</body>
+</html>

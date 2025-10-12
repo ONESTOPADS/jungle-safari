@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Add Blog Writing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    button {
+      grid-column: span 2;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+      button {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Blog Writing</h2>
+    <form id="blogWritingForm">
+      <div>
+        <label>Title</label>
+        <input name="title" placeholder="Test Blog" required>
+      </div>
+      <div>
+        <label>Reserve Name</label>
+        <input name="reserveName" placeholder="Test Reserve" required>
+      </div>
+      <div>
+        <label>Date Range</label>
+        <input name="dateRange" placeholder="2025-10-01" required>
+      </div>
+      <div>
+        <label>Location</label>
+        <input name="location" placeholder="India" required>
+      </div>
+
+      <div class="full-width">
+        <label>Headline</label>
+        <textarea name="headline" placeholder="Hello World"></textarea>
+      </div>
+      <div class="full-width">
+        <label>Description</label>
+        <textarea name="description" placeholder="This is a test"></textarea>
+      </div>
+      <div class="full-width">
+        <label>Authors</label>
+        <textarea name="authors" placeholder="John Doe"></textarea>
+      </div>
+      <div class="full-width">
+        <label>Key Takeaways</label>
+        <textarea name="keytakeways" placeholder="Tip 1"></textarea>
+      </div>
+      <div class="full-width">
+        <label>Reading Forest</label>
+        <textarea name="readingforest" placeholder="Insight 1"></textarea>
+      </div>
+      <div class="full-width">
+        <label>Light</label>
+        <textarea name="light" placeholder="Photography tips..."></textarea>
+      </div>
+      <div class="full-width">
+        <label>Plan Safari</label>
+        <textarea name="Plansafari" placeholder="Plan 1"></textarea>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('blogWritingForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {};
+
+      formData.forEach((val, key) => {
+        // For array fields: wrap the value inside an array (no splitting)
+        if (["headline","description","authors","keytakeways","readingforest","light","Plansafari"].includes(key)) {
+          data[key] = [val.trim()]; 
+        } else {
+          data[key] = val.trim();
+        }
+      });
+
+      const response = await fetch('http://localhost:5000/api/Blogwriting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert('Blog writing saved!');
+        e.target.reset();
+      } else {
+        alert('Error saving blog writing');
+      }
+    }
+  </script>
+</body>
+</html>
