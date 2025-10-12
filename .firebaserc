@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "jungle-website-deploy"
+    "default": "jungle-hue",
+    "prod": "jungle-hue"
   },
   "targets": {},
   "etags": {}
