@@ -178,7 +178,7 @@ h4, h5, h6 {
 }
 
 h1, .h1 {
-  font-size: 15px;
+  font-size: 33px;
 }
 
 h2, .h2 {
@@ -2506,7 +2506,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .banner-left h1 {
   margin: 20px 0;
-  font-size: 60px;
+  font-size: 30px;
   text-transform: uppercase;
 }
 
