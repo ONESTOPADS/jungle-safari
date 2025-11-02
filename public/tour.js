@@ -12,18 +12,24 @@ const firebaseConfig = {
     appId: "1:281070360249:web:2b9ce67d7af5b7415e2d68",
     measurementId: "G-TBMB0R0ED6"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // References to HTML
 const tourTitle = document.getElementById('reserveHeading');
 const tourLocation = document.getElementById('locationText');
+const tourImage1 = document.getElementById('tourImage1');
+const tourImage2 = document.getElementById('tourImage2');
+const tourThumbnail = document.getElementById('tourThumbnail'); // Add this if you have a thumbnail
+
 const dayBlocks = {
     day1: document.getElementById('day1Block'),
     day2: document.getElementById('day2Block'),
     day3: document.getElementById('day3Block'),
     day4: document.getElementById('day4Block')
 };
+
 const packageIncludesBlock = document.getElementById('packageIncludes');
 const exclusionsBlock = document.getElementById('exclusions');
 
@@ -31,34 +37,59 @@ const exclusionsBlock = document.getElementById('exclusions');
 function showTour(tour) {
     tourTitle.textContent = tour.title || "Trip Itinerary";
     tourLocation.textContent = tour.location || "";
+    
+    // ✅ Set image sources with fallback
+    if (tourThumbnail && tour.imageLink) {
+        tourThumbnail.src = tour.imageLink;
+        tourThumbnail.alt = tour.title || "Tour thumbnail";
+    }
+    
+    if (tourImage1 && tour.image1) {
+        tourImage1.src = tour.image1;
+        tourImage1.alt = tour.title || "Tour image 1";
+    }
+    
+    if (tourImage2 && tour.image2) {
+        tourImage2.src = tour.image2;
+        tourImage2.alt = tour.title || "Tour image 2";
+    }
 
+    // Days itinerary
     ["day1", "day2", "day3", "day4"].forEach(day => {
-        dayBlocks[day].innerHTML = "";
-        if (tour[day] && tour[day].length) {
-            tour[day].forEach(activity => {
-                const li = document.createElement("li");
-                li.textContent = activity;
-                dayBlocks[day].appendChild(li);
-            });
+        if (dayBlocks[day]) {
+            dayBlocks[day].innerHTML = "";
+            if (tour[day] && tour[day].length) {
+                tour[day].forEach(activity => {
+                    const li = document.createElement("li");
+                    li.textContent = activity;
+                    dayBlocks[day].appendChild(li);
+                });
+            }
         }
     });
 
-    packageIncludesBlock.innerHTML = "";
-    if (tour.packageIncludes && tour.packageIncludes.length) {
-        tour.packageIncludes.forEach(item => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            packageIncludesBlock.appendChild(li);
-        });
+    // Package includes
+    if (packageIncludesBlock) {
+        packageIncludesBlock.innerHTML = "";
+        if (tour.packageIncludes && tour.packageIncludes.length) {
+            tour.packageIncludes.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                packageIncludesBlock.appendChild(li);
+            });
+        }
     }
 
-    exclusionsBlock.innerHTML = "";
-    if (tour.exclusions && tour.exclusions.length) {
-        tour.exclusions.forEach(item => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            exclusionsBlock.appendChild(li);
-        });
+    // Exclusions
+    if (exclusionsBlock) {
+        exclusionsBlock.innerHTML = "";
+        if (tour.exclusions && tour.exclusions.length) {
+            tour.exclusions.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                exclusionsBlock.appendChild(li);
+            });
+        }
     }
 }
 
@@ -71,6 +102,7 @@ if (tourId) {
     onValue(ref(db, `tours/${tourId}`), (snapshot) => {
         const tour = snapshot.val();
         if (tour) {
+            console.log("Tour data:", tour); // ✅ Debug: check if images are in data
             showTour(tour);
         } else {
             alert("Tour not found!");
