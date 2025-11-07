@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tour Management System</title>
+  <title>CMS - Tour & Blog Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -20,9 +20,144 @@
       padding: 20px;
     }
 
+    /* Login Page Styles */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 48px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      max-width: 420px;
+      width: 100%;
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .login-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .login-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .login-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+
+    .login-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+      animation: shake 0.5s;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    /* CMS Container - Hidden by default */
     .cms-container {
       max-width: 1400px;
       margin: 0 auto;
+      display: none;
+    }
+
+    .cms-container.active {
+      display: block;
     }
 
     .header {
@@ -32,18 +167,83 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       margin-bottom: 24px;
       backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .header h1 {
+    .header-left h1 {
       font-size: 28px;
       font-weight: 700;
       color: #1a202c;
       margin-bottom: 4px;
     }
 
-    .header p {
+    .header-left p {
       color: #718096;
       font-size: 14px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logout-btn {
+      padding: 10px 20px;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #64748b;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: #667eea;
+      color: #667eea;
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     .main-grid {
@@ -61,6 +261,26 @@
       backdrop-filter: blur(10px);
       position: sticky;
       top: 20px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    .form-panel::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .form-panel::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+
+    .form-panel::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .form-panel::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
     .form-header {
@@ -122,7 +342,8 @@
     }
 
     .form-group input,
-    .form-group textarea {
+    .form-group textarea,
+    .form-group select {
       width: 100%;
       padding: 12px 14px;
       border: 2px solid #e2e8f0;
@@ -134,7 +355,8 @@
     }
 
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
       outline: none;
       border-color: #667eea;
       background: white;
@@ -143,7 +365,7 @@
 
     .form-group textarea {
       resize: vertical;
-      min-height: 60px;
+      min-height: 100px;
     }
 
     .image-preview {
@@ -161,6 +383,211 @@
       object-fit: cover;
       border-radius: 8px;
       border: 2px solid #e2e8f0;
+    }
+
+    /* Blog Specific Styles */
+    .author-section {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .author-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-divider {
+      grid-column: span 2;
+      height: 2px;
+      background: linear-gradient(90deg, #e2e8f0 0%, #cbd5e0 50%, #e2e8f0 100%);
+      margin: 12px 0;
+    }
+
+    .content-sections {
+      grid-column: span 2;
+      margin-top: 12px;
+    }
+
+    .content-sections-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .content-sections-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a202c;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .add-section-btn {
+      padding: 8px 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .add-section-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .section-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .section-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-number {
+      background: #667eea;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .remove-section-btn {
+      padding: 6px 12px;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .remove-section-btn:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    .section-fields {
+      display: grid;
+      gap: 16px;
+    }
+
+    .keypair-container {
+      grid-column: span 2;
+    }
+
+    .keypair-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .keypair-header label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .add-keypair-btn {
+      padding: 6px 12px;
+      background: #e0e7ff;
+      color: #4338ca;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-keypair-btn:hover {
+      background: #4338ca;
+      color: white;
+    }
+
+    .keypair-item {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: start;
+    }
+
+    .keypair-item input {
+      padding: 10px 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+
+    .keypair-item input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+    }
+
+    .remove-keypair-btn {
+      width: 36px;
+      height: 36px;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .remove-keypair-btn:hover {
+      background: #dc2626;
+      color: white;
     }
 
     .form-actions {
@@ -210,7 +637,7 @@
       background: #cbd5e0;
     }
 
-    .tours-panel {
+    .list-panel {
       background: rgba(255, 255, 255, 0.98);
       padding: 28px;
       border-radius: 16px;
@@ -218,7 +645,7 @@
       backdrop-filter: blur(10px);
     }
 
-    .tours-header {
+    .list-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -227,13 +654,13 @@
       border-bottom: 2px solid #e2e8f0;
     }
 
-    .tours-header h2 {
+    .list-header h2 {
       font-size: 20px;
       font-weight: 700;
       color: #1a202c;
     }
 
-    .tour-count {
+    .item-count {
       background: #f0fdf4;
       color: #16a34a;
       padding: 6px 14px;
@@ -242,7 +669,7 @@
       font-weight: 600;
     }
 
-    .tour-card {
+    .item-card {
       background: #f8fafc;
       border: 2px solid #e2e8f0;
       border-radius: 12px;
@@ -251,36 +678,36 @@
       transition: all 0.2s;
     }
 
-    .tour-card:hover {
+    .item-card:hover {
       border-color: #667eea;
       box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
       transform: translateY(-2px);
     }
 
-    .tour-card-header {
+    .item-card-header {
       display: flex;
       justify-content: space-between;
       align-items: start;
       margin-bottom: 12px;
     }
 
-    .tour-card-title {
+    .item-card-title {
       flex: 1;
     }
 
-    .tour-card-title h3 {
+    .item-card-title h3 {
       font-size: 18px;
       font-weight: 700;
       color: #1a202c;
       margin-bottom: 4px;
     }
 
-    .tour-card-title p {
+    .item-card-title p {
       font-size: 14px;
       color: #64748b;
     }
 
-    .tour-card-actions {
+    .item-card-actions {
       display: flex;
       gap: 8px;
     }
@@ -320,7 +747,7 @@
       transform: scale(1.1);
     }
 
-    .tour-card-details {
+    .item-card-details {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
@@ -361,6 +788,19 @@
     .detail-value {
       color: #334155;
       font-weight: 500;
+    }
+
+    .blog-excerpt {
+      grid-column: span 2;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+      max-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .empty-state {
@@ -409,7 +849,6 @@
       from {
         opacity: 0;
       }
-
       to {
         opacity: 1;
       }
@@ -423,18 +862,6 @@
       width: 90%;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       animation: slideUp 0.3s;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
     }
 
     .modal-header {
@@ -479,10 +906,16 @@
 
       .form-panel {
         position: static;
+        max-height: none;
       }
     }
 
     @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 16px;
+      }
+
       .form-grid {
         grid-template-columns: 1fr;
       }
@@ -496,7 +929,15 @@
         flex-direction: column;
       }
 
-      .tour-card-details {
+      .item-card-details {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-navigation {
+        flex-direction: column;
+      }
+
+      .keypair-item {
         grid-template-columns: 1fr;
       }
     }
@@ -504,126 +945,252 @@
 </head>
 
 <body>
-  <div class="cms-container">
+  <!-- Login Page -->
+  <div class="login-container" id="loginPage">
+    <div class="login-box">
+      <div class="login-header">
+        <h1>🔐 CMS Login</h1>
+        <p>Enter your credentials to access the management system</p>
+      </div>
+      <form class="login-form" id="loginForm">
+        <div class="error-message" id="loginError">Invalid username or password</div>
+        <div class="login-group">
+          <label>Username</label>
+          <input type="text" id="username" placeholder="Enter username" required>
+        </div>
+        <div class="login-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CMS Container -->
+  <div class="cms-container" id="cmsContainer">
     <div class="header">
-      <h1>🌿 Tour Management System</h1>
-      <p>Manage your wildlife and nature tours with ease</p>
+      <div class="header-left">
+        <h1>🌿 Content Management System</h1>
+        <p>Manage your tours and blog content</p>
+      </div>
+      <div class="header-right">
+        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+      </div>
     </div>
 
-    <div class="main-grid">
-      <div class="form-panel">
-        <div class="form-header">
-          <h2 id="formTitle">Add New Tour</h2>
-          <span class="form-badge" id="formBadge">NEW</span>
-        </div>
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="tours">🗺️ Tour Management</button>
+      <button class="tab-btn" data-tab="blogs">📝 Blog Management</button>
+    </div>
 
-        <form id="tourForm">
-          <input type="hidden" id="editingId" value="">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label>Tour Title <span class="required">*</span></label>
-              <input name="title" placeholder="e.g., Safari Adventure" required>
-            </div>
-
-            <div class="form-group">
-              <label>Reserve Name <span class="required">*</span></label>
-              <input name="reserveName" placeholder="e.g., Kaziranga" required>
-            </div>
-
-            <div class="form-group">
-              <label>Location <span class="required">*</span></label>
-              <input name="location" placeholder="e.g., Assam, India" required>
-            </div>
-
-            <div class="form-group full">
-              <label>Date Range <span class="required">*</span></label>
-              <input name="dateRange" placeholder="e.g., 2025-10-01 to 2025-10-05" required>
-            </div>
-
-            <div class="form-group full">
-              <label>Day 1 Activities</label>
-              <input name="day1" placeholder="e.g., Arrival, Check-in, Welcome dinner">
-            </div>
-
-            <div class="form-group full">
-              <label>Day 2 Activities</label>
-              <input name="day2" placeholder="e.g., Morning safari, Wildlife photography">
-            </div>
-
-            <div class="form-group full">
-              <label>Day 3 Activities</label>
-              <input name="day3" placeholder="e.g., Boat ride, Bird watching">
-            </div>
-
-            <div class="form-group full">
-              <label>Day 4 Activities</label>
-              <input name="day4" placeholder="e.g., Departure, Return journey">
-            </div>
-
-            <div class="form-group full">
-              <label>Package Includes (comma separated)</label>
-              <input name="packageIncludes" placeholder="e.g., Accommodation, Meals, Guide">
-            </div>
-
-            <div class="form-group full">
-              <label>Exclusions (comma separated)</label>
-              <input name="exclusions" placeholder="e.g., Flights, Personal expenses">
-            </div>
-
-            <div class="form-group full">
-              <label>Thumbnail Image</label>
-              <input id="thumbImage" type="file" accept="image/*">
-              <div class="image-preview" id="thumbPreview">
-                <img src="" alt="Thumbnail preview">
-              </div>
-            </div>
-
-            <div class="form-group full">
-              <label>Image 1</label>
-              <input id="tourImage1" type="file" accept="image/*">
-              <div class="image-preview" id="image1Preview">
-                <img src="" alt="Image 1 preview">
-              </div>
-            </div>
-
-            <div class="form-group full">
-              <label>Image 2</label>
-              <input id="tourImage2" type="file" accept="image/*">
-              <div class="image-preview" id="image2Preview">
-                <img src="" alt="Image 2 preview">
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary" id="submitBtn">
-                <span id="submitText">💾 Save Tour</span>
-              </button>
-              <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">
-                ✕ Cancel
-              </button>
-            </div>
+    <!-- Tours Tab -->
+    <div class="tab-content active" id="toursTab">
+      <div class="main-grid">
+        <div class="form-panel">
+          <div class="form-header">
+            <h2 id="tourFormTitle">Add New Tour</h2>
+            <span class="form-badge" id="tourFormBadge">NEW</span>
           </div>
-        </form>
-      </div>
 
-      <div class="tours-panel">
-        <div class="tours-header">
-          <h2>All Tours</h2>
-          <span class="tour-count" id="tourCount">0 Tours</span>
+          <form id="tourForm">
+            <input type="hidden" id="tourEditingId" value="">
+            <div class="form-grid">
+              <div class="form-group full">
+                <label>Tour Title <span class="required">*</span></label>
+                <input name="title" placeholder="e.g., Safari Adventure" required>
+              </div>
+
+              <div class="form-group">
+                <label>Reserve Name <span class="required">*</span></label>
+                <input name="reserveName" placeholder="e.g., Kaziranga" required>
+              </div>
+
+              <div class="form-group">
+                <label>Location <span class="required">*</span></label>
+                <input name="location" placeholder="e.g., Assam, India" required>
+              </div>
+
+              <div class="form-group full">
+                <label>Date Range <span class="required">*</span></label>
+                <input name="dateRange" placeholder="e.g., 2025-10-01 to 2025-10-05" required>
+              </div>
+
+              <div class="form-group full">
+                <label>Day 1 Activities</label>
+                <input name="day1" placeholder="e.g., Arrival, Check-in, Welcome dinner">
+              </div>
+
+              <div class="form-group full">
+                <label>Day 2 Activities</label>
+                <input name="day2" placeholder="e.g., Morning safari, Wildlife photography">
+              </div>
+
+              <div class="form-group full">
+                <label>Day 3 Activities</label>
+                <input name="day3" placeholder="e.g., Boat ride, Bird watching">
+              </div>
+
+              <div class="form-group full">
+                <label>Day 4 Activities</label>
+                <input name="day4" placeholder="e.g., Departure, Return journey">
+              </div>
+
+              <div class="form-group full">
+                <label>Package Includes (comma separated)</label>
+                <input name="packageIncludes" placeholder="e.g., Accommodation, Meals, Guide">
+              </div>
+
+              <div class="form-group full">
+                <label>Exclusions (comma separated)</label>
+                <input name="exclusions" placeholder="e.g., Flights, Personal expenses">
+              </div>
+
+              <div class="form-group full">
+                <label>Thumbnail Image</label>
+                <input id="tourThumbImage" type="file" accept="image/*">
+                <div class="image-preview" id="tourThumbPreview">
+                  <img src="/placeholder.svg" alt="Thumbnail preview">
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label>Image 1</label>
+                <input id="tourImage1" type="file" accept="image/*">
+                <div class="image-preview" id="tourImage1Preview">
+                  <img src="/placeholder.svg" alt="Image 1 preview">
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label>Image 2</label>
+                <input id="tourImage2" type="file" accept="image/*">
+                <div class="image-preview" id="tourImage2Preview">
+                  <img src="/placeholder.svg" alt="Image 2 preview">
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="tourSubmitBtn">
+                  <span id="tourSubmitText">💾 Save Tour</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="tourCancelBtn" style="display: none;">
+                  ✕ Cancel
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
-        <div id="toursList"></div>
+
+        <div class="list-panel">
+          <div class="list-header">
+            <h2>All Tours</h2>
+            <span class="item-count" id="tourCount">0 Tours</span>
+          </div>
+          <div id="toursList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blogs Tab -->
+    <div class="tab-content" id="blogsTab">
+      <div class="main-grid">
+        <div class="form-panel">
+          <div class="form-header">
+            <h2 id="blogFormTitle">Add New Blog</h2>
+            <span class="form-badge" id="blogFormBadge">NEW</span>
+          </div>
+
+          <form id="blogForm">
+            <input type="hidden" id="blogEditingId" value="">
+            <div class="form-grid">
+              <!-- Basic Blog Info -->
+              <div class="form-group full">
+                <label>Blog Title <span class="required">*</span></label>
+                <input name="title" placeholder="e.g., Wildlife Photography Tips" required>
+              </div>
+
+              <div class="form-group full">
+                <label>Blog Main Image <span class="required">*</span></label>
+                <input id="blogMainImage" type="file" accept="image/*">
+                <div class="image-preview" id="blogMainPreview">
+                  <img src="/placeholder.svg" alt="Main image preview">
+                </div>
+              </div>
+
+              <div class="section-divider"></div>
+
+              <!-- Author Section -->
+              <div class="form-group full">
+                <div class="author-section">
+                  <h3>👤 Author Information</h3>
+                  
+                  <div class="form-group">
+                    <label>Author Name <span class="required">*</span></label>
+                    <input name="authorName" placeholder="e.g., John Doe" required>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 16px;">
+                    <label>Author Image</label>
+                    <input id="authorImage" type="file" accept="image/*">
+                    <div class="image-preview" id="authorImagePreview">
+                      <img src="/placeholder.svg" alt="Author image preview">
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 16px;">
+                    <label>Author Summary</label>
+                    <textarea name="authorSummary" placeholder="Brief bio about the author" rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section-divider"></div>
+
+              <!-- Dynamic Content Sections -->
+              <div class="content-sections">
+                <div class="content-sections-header">
+                  <h3>📝 Content Sections</h3>
+                  <button type="button" class="add-section-btn" id="addSectionBtn">
+                    <span>➕</span> Add Section
+                  </button>
+                </div>
+                <div id="sectionsContainer"></div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="blogSubmitBtn">
+                  <span id="blogSubmitText">💾 Save Blog</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="blogCancelBtn" style="display: none;">
+                  ✕ Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="list-panel">
+          <div class="list-header">
+            <h2>All Blogs</h2>
+            <span class="item-count" id="blogCount">0 Blogs</span>
+          </div>
+          <div id="blogsList"></div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Delete Modal -->
   <div class="modal" id="deleteModal">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-icon">⚠️</div>
-        <h3>Delete Tour</h3>
+        <h3>Delete Item</h3>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete <strong id="deleteTourName"></strong>? This action cannot be undone.</p>
+        <p>Are you sure you want to delete <strong id="deleteItemName"></strong>? This action cannot be undone.</p>
       </div>
       <div class="modal-actions">
         <button class="btn btn-secondary" id="cancelDelete">Cancel</button>
@@ -650,37 +1217,126 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // ImgBB API Key (Get free key from https://api.imgbb.com/)
-    const IMGBB_API_KEY = "624e7df60a5f80a3ef7aef1a5cf71ba1"; // Replace with your key
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "admin123";
+    const IMGBB_API_KEY = "624e7df60a5f80a3ef7aef1a5cf71ba1";
 
-    const form = document.getElementById('tourForm');
+    // DOM Elements
+    const loginPage = document.getElementById('loginPage');
+    const cmsContainer = document.getElementById('cmsContainer');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const toursTab = document.getElementById('toursTab');
+    const blogsTab = document.getElementById('blogsTab');
+
+    // Tour elements
+    const tourForm = document.getElementById('tourForm');
     const toursList = document.getElementById('toursList');
-    const editingIdInput = document.getElementById('editingId');
-    const formTitle = document.getElementById('formTitle');
-    const formBadge = document.getElementById('formBadge');
-    const submitText = document.getElementById('submitText');
-    const submitBtn = document.getElementById('submitBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
+    const tourEditingId = document.getElementById('tourEditingId');
+    const tourFormTitle = document.getElementById('tourFormTitle');
+    const tourFormBadge = document.getElementById('tourFormBadge');
+    const tourSubmitText = document.getElementById('tourSubmitText');
+    const tourSubmitBtn = document.getElementById('tourSubmitBtn');
+    const tourCancelBtn = document.getElementById('tourCancelBtn');
     const tourCount = document.getElementById('tourCount');
+    const tourThumbImage = document.getElementById('tourThumbImage');
+    const tourImage1 = document.getElementById('tourImage1');
+    const tourImage2 = document.getElementById('tourImage2');
+    const tourThumbPreview = document.getElementById('tourThumbPreview');
+    const tourImage1Preview = document.getElementById('tourImage1Preview');
+    const tourImage2Preview = document.getElementById('tourImage2Preview');
+
+    // Blog elements
+    const blogForm = document.getElementById('blogForm');
+    const blogsList = document.getElementById('blogsList');
+    const blogEditingId = document.getElementById('blogEditingId');
+    const blogFormTitle = document.getElementById('blogFormTitle');
+    const blogFormBadge = document.getElementById('blogFormBadge');
+    const blogSubmitText = document.getElementById('blogSubmitText');
+    const blogSubmitBtn = document.getElementById('blogSubmitBtn');
+    const blogCancelBtn = document.getElementById('blogCancelBtn');
+    const blogCount = document.getElementById('blogCount');
+    const blogMainImage = document.getElementById('blogMainImage');
+    const blogMainPreview = document.getElementById('blogMainPreview');
+    const authorImage = document.getElementById('authorImage');
+    const authorImagePreview = document.getElementById('authorImagePreview');
+    const addSectionBtn = document.getElementById('addSectionBtn');
+    const sectionsContainer = document.getElementById('sectionsContainer');
+
+    // Modal elements
     const deleteModal = document.getElementById('deleteModal');
-    const deleteTourName = document.getElementById('deleteTourName');
+    const deleteItemName = document.getElementById('deleteItemName');
     const confirmDelete = document.getElementById('confirmDelete');
     const cancelDelete = document.getElementById('cancelDelete');
 
-    const thumbImage = document.getElementById('thumbImage');
-    const tourImage1 = document.getElementById('tourImage1');
-    const tourImage2 = document.getElementById('tourImage2');
-
-    const thumbPreview = document.getElementById('thumbPreview');
-    const image1Preview = document.getElementById('image1Preview');
-    const image2Preview = document.getElementById('image2Preview');
-
     let deleteId = null;
+    let deleteType = null;
+    let sectionCounter = 0;
 
-    // Image preview functionality
-    thumbImage.addEventListener('change', (e) => previewImage(e, thumbPreview));
-    tourImage1.addEventListener('change', (e) => previewImage(e, image1Preview));
-    tourImage2.addEventListener('change', (e) => previewImage(e, image2Preview));
+    // Check login
+    const isLoggedIn = sessionStorage.getItem('cmsLoggedIn') === 'true';
+    if (isLoggedIn) {
+      showCMS();
+    }
+
+    // Login handler
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        sessionStorage.setItem('cmsLoggedIn', 'true');
+        showCMS();
+        loginError.classList.remove('show');
+        loginForm.reset();
+      } else {
+        loginError.classList.add('show');
+      }
+    });
+
+    // Logout handler
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('cmsLoggedIn');
+      cmsContainer.classList.remove('active');
+      loginPage.style.display = 'flex';
+      resetTourForm();
+      resetBlogForm();
+    });
+
+    function showCMS() {
+      loginPage.style.display = 'none';
+      cmsContainer.classList.add('active');
+      loadTours();
+      loadBlogs();
+    }
+
+    // Tab switching
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (tabName === 'tours') {
+          toursTab.classList.add('active');
+          blogsTab.classList.remove('active');
+        } else {
+          blogsTab.classList.add('active');
+          toursTab.classList.remove('active');
+        }
+      });
+    });
+
+    // Image preview
+    tourThumbImage.addEventListener('change', (e) => previewImage(e, tourThumbPreview));
+    tourImage1.addEventListener('change', (e) => previewImage(e, tourImage1Preview));
+    tourImage2.addEventListener('change', (e) => previewImage(e, tourImage2Preview));
+    blogMainImage.addEventListener('change', (e) => previewImage(e, blogMainPreview));
+    authorImage.addEventListener('change', (e) => previewImage(e, authorImagePreview));
 
     function previewImage(event, previewElement) {
       const file = event.target.files[0];
@@ -694,10 +1350,9 @@
       }
     }
 
-    // Upload image to ImgBB
+    // Upload to ImgBB
     const uploadToImgBB = async (file) => {
       if (!file) return null;
-
       const formData = new FormData();
       formData.append('image', file);
 
@@ -706,7 +1361,6 @@
           method: 'POST',
           body: formData
         });
-
         const data = await response.json();
         if (data.success) {
           return data.data.url;
@@ -719,7 +1373,7 @@
       }
     };
 
-    // Load and display tours
+    // ==================== TOUR MANAGEMENT ====================
     const loadTours = () => {
       const listRef = ref(db, 'tours/');
       onValue(listRef, snapshot => {
@@ -732,19 +1386,19 @@
 
           tours.forEach(([id, tour]) => {
             const card = document.createElement('div');
-            card.className = 'tour-card';
+            card.className = 'item-card';
             card.innerHTML = `
-              <div class="tour-card-header">
-                <div class="tour-card-title">
+              <div class="item-card-header">
+                <div class="item-card-title">
                   <h3>${tour.title || 'Untitled Tour'}</h3>
                   <p>${tour.reserveName || 'No reserve specified'}</p>
                 </div>
-                <div class="tour-card-actions">
-                  <button class="icon-btn edit" data-id="${id}" title="Edit">✏️</button>
-                  <button class="icon-btn delete" data-id="${id}" title="Delete">🗑️</button>
+                <div class="item-card-actions">
+                  <button class="icon-btn edit" data-id="${id}" data-type="tour" title="Edit">✏️</button>
+                  <button class="icon-btn delete" data-id="${id}" data-type="tour" title="Delete">🗑️</button>
                 </div>
               </div>
-              <div class="tour-card-details">
+              <div class="item-card-details">
                 <div class="detail-item">
                   <div class="detail-icon">📍</div>
                   <div class="detail-text">
@@ -764,21 +1418,7 @@
             toursList.appendChild(card);
           });
 
-          toursList.querySelectorAll('.edit').forEach(button => {
-            button.addEventListener('click', () => {
-              const id = button.dataset.id;
-              fillForm(id, data[id]);
-            });
-          });
-
-          toursList.querySelectorAll('.delete').forEach(button => {
-            button.addEventListener('click', () => {
-              const id = button.dataset.id;
-              deleteId = id;
-              deleteTourName.textContent = data[id].title || 'this tour';
-              deleteModal.classList.add('active');
-            });
-          });
+          attachEventHandlers();
         } else {
           tourCount.textContent = '0 Tours';
           toursList.innerHTML = `
@@ -794,71 +1434,68 @@
       });
     };
 
-    const fillForm = (id, tour) => {
-      editingIdInput.value = id;
-      formTitle.textContent = 'Edit Tour';
-      formBadge.textContent = 'EDITING';
-      formBadge.classList.add('editing');
-      submitText.textContent = '💾 Update Tour';
-      cancelBtn.style.display = 'block';
+    const fillTourForm = (id, tour) => {
+      tourEditingId.value = id;
+      tourFormTitle.textContent = 'Edit Tour';
+      tourFormBadge.textContent = 'EDITING';
+      tourFormBadge.classList.add('editing');
+      tourSubmitText.textContent = '💾 Update Tour';
+      tourCancelBtn.style.display = 'block';
 
-      form.title.value = tour.title || '';
-      form.reserveName.value = tour.reserveName || '';
-      form.dateRange.value = tour.dateRange || '';
-      form.location.value = tour.location || '';
-      form.day1.value = (tour.day1 || []).join(', ');
-      form.day2.value = (tour.day2 || []).join(', ');
-      form.day3.value = (tour.day3 || []).join(', ');
-      form.day4.value = (tour.day4 || []).join(', ');
-      form.packageIncludes.value = (tour.packageIncludes || []).join(', ');
-      form.exclusions.value = (tour.exclusions || []).join(', ');
+      tourForm.title.value = tour.title || '';
+      tourForm.reserveName.value = tour.reserveName || '';
+      tourForm.dateRange.value = tour.dateRange || '';
+      tourForm.location.value = tour.location || '';
+      tourForm.day1.value = (tour.day1 || []).join(', ');
+      tourForm.day2.value = (tour.day2 || []).join(', ');
+      tourForm.day3.value = (tour.day3 || []).join(', ');
+      tourForm.day4.value = (tour.day4 || []).join(', ');
+      tourForm.packageIncludes.value = (tour.packageIncludes || []).join(', ');
+      tourForm.exclusions.value = (tour.exclusions || []).join(', ');
 
-      // Show existing images
       if (tour.imageLink) {
-        thumbPreview.querySelector('img').src = tour.imageLink;
-        thumbPreview.classList.add('show');
+        tourThumbPreview.querySelector('img').src = tour.imageLink;
+        tourThumbPreview.classList.add('show');
       }
       if (tour.image1) {
-        image1Preview.querySelector('img').src = tour.image1;
-        image1Preview.classList.add('show');
+        tourImage1Preview.querySelector('img').src = tour.image1;
+        tourImage1Preview.classList.add('show');
       }
       if (tour.image2) {
-        image2Preview.querySelector('img').src = tour.image2;
-        image2Preview.classList.add('show');
+        tourImage2Preview.querySelector('img').src = tour.image2;
+        tourImage2Preview.classList.add('show');
       }
 
-      thumbImage.value = '';
+      tourThumbImage.value = '';
       tourImage1.value = '';
       tourImage2.value = '';
-
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      tourForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
-    const resetForm = () => {
-      form.reset();
-      editingIdInput.value = '';
-      formTitle.textContent = 'Add New Tour';
-      formBadge.textContent = 'NEW';
-      formBadge.classList.remove('editing');
-      submitText.textContent = '💾 Save Tour';
-      cancelBtn.style.display = 'none';
-      thumbImage.value = '';
+    const resetTourForm = () => {
+      tourForm.reset();
+      tourEditingId.value = '';
+      tourFormTitle.textContent = 'Add New Tour';
+      tourFormBadge.textContent = 'NEW';
+      tourFormBadge.classList.remove('editing');
+      tourSubmitText.textContent = '💾 Save Tour';
+      tourCancelBtn.style.display = 'none';
+      tourThumbImage.value = '';
       tourImage1.value = '';
       tourImage2.value = '';
-      thumbPreview.classList.remove('show');
-      image1Preview.classList.remove('show');
-      image2Preview.classList.remove('show');
+      tourThumbPreview.classList.remove('show');
+      tourImage1Preview.classList.remove('show');
+      tourImage2Preview.classList.remove('show');
     };
 
-    cancelBtn.addEventListener('click', resetForm);
+    tourCancelBtn.addEventListener('click', resetTourForm);
 
-    form.addEventListener('submit', async (e) => {
+    tourForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      tourSubmitBtn.disabled = true;
+      const originalText = tourSubmitText.textContent;
 
-      submitBtn.disabled = true;
-      const originalText = submitText.textContent;
-
-      const formData = new FormData(form);
+      const formData = new FormData(tourForm);
       const data = {};
 
       try {
@@ -870,96 +1507,438 @@
           }
         });
 
-        const editingId = editingIdInput.value;
+        const editingId = tourEditingId.value;
 
-        // Upload images to ImgBB
-        if (thumbImage.files[0]) {
-          submitText.textContent = '⏳ Uploading thumbnail...';
-          data.imageLink = await uploadToImgBB(thumbImage.files[0]);
+        if (tourThumbImage.files[0]) {
+          tourSubmitText.textContent = '⏳ Uploading thumbnail...';
+          data.imageLink = await uploadToImgBB(tourThumbImage.files[0]);
         } else if (editingId) {
-          const existingRef = ref(db, `tours/${editingId}`);
           const snapshot = await new Promise((resolve) => {
-            onValue(existingRef, resolve, { onlyOnce: true });
+            onValue(ref(db, `tours/${editingId}`), resolve, { onlyOnce: true });
           });
           const existingData = snapshot.val();
-          if (existingData?.imageLink) {
-            data.imageLink = existingData.imageLink;
-          }
+          if (existingData?.imageLink) data.imageLink = existingData.imageLink;
         }
 
         if (tourImage1.files[0]) {
-          submitText.textContent = '⏳ Uploading image 1...';
+          tourSubmitText.textContent = '⏳ Uploading image 1...';
           data.image1 = await uploadToImgBB(tourImage1.files[0]);
         } else if (editingId) {
-          const existingRef = ref(db, `tours/${editingId}`);
           const snapshot = await new Promise((resolve) => {
-            onValue(existingRef, resolve, { onlyOnce: true });
+            onValue(ref(db, `tours/${editingId}`), resolve, { onlyOnce: true });
           });
           const existingData = snapshot.val();
-          if (existingData?.image1) {
-            data.image1 = existingData.image1;
-          }
+          if (existingData?.image1) data.image1 = existingData.image1;
         }
 
         if (tourImage2.files[0]) {
-          submitText.textContent = '⏳ Uploading image 2...';
+          tourSubmitText.textContent = '⏳ Uploading image 2...';
           data.image2 = await uploadToImgBB(tourImage2.files[0]);
         } else if (editingId) {
-          const existingRef = ref(db, `tours/${editingId}`);
           const snapshot = await new Promise((resolve) => {
-            onValue(existingRef, resolve, { onlyOnce: true });
+            onValue(ref(db, `tours/${editingId}`), resolve, { onlyOnce: true });
           });
           const existingData = snapshot.val();
-          if (existingData?.image2) {
-            data.image2 = existingData.image2;
-          }
+          if (existingData?.image2) data.image2 = existingData.image2;
         }
 
-        // Save to database
-        submitText.textContent = '⏳ Saving...';
+        tourSubmitText.textContent = '⏳ Saving...';
         if (editingId) {
           await update(ref(db, `tours/${editingId}`), data);
         } else {
           await push(ref(db, 'tours/'), data);
         }
 
-        resetForm();
+        resetTourForm();
         alert('✅ Tour saved successfully!');
       } catch (error) {
         console.error(error);
         alert('❌ Failed to save tour. Please try again.');
       } finally {
-        submitBtn.disabled = false;
-        submitText.textContent = originalText;
+        tourSubmitBtn.disabled = false;
+        tourSubmitText.textContent = originalText;
       }
     });
 
-    confirmDelete.addEventListener('click', async () => {
-      if (deleteId) {
-        try {
-          await remove(ref(db, `tours/${deleteId}`));
-          deleteModal.classList.remove('active');
-          deleteId = null;
-        } catch (error) {
-          console.error(error);
-          alert('❌ Failed to delete tour. Please try again.');
+    // ==================== BLOG MANAGEMENT ====================
+
+    // Add Section functionality
+    addSectionBtn.addEventListener('click', () => {
+      addContentSection();
+    });
+
+    function addContentSection(data = null) {
+      sectionCounter++;
+      const sectionId = `section-${sectionCounter}`;
+      
+      const sectionCard = document.createElement('div');
+      sectionCard.className = 'section-card';
+      sectionCard.dataset.sectionId = sectionId;
+      
+      sectionCard.innerHTML = `
+        <div class="section-header">
+          <div class="section-number">${sectionCounter}</div>
+          <button type="button" class="remove-section-btn" onclick="window.removeSection('${sectionId}')">
+            🗑️ Remove Section
+          </button>
+        </div>
+        <div class="section-fields">
+          <div class="form-group full">
+            <label>Section Heading</label>
+            <input class="section-heading" placeholder="e.g., Introduction to Wildlife" value="${data?.heading || ''}">
+          </div>
+
+          <div class="form-group full">
+            <label>Section Content</label>
+            <textarea class="section-content" placeholder="Write the content for this section..." rows="5">${data?.content || ''}</textarea>
+          </div>
+
+          <div class="form-group full">
+            <label>Section Image (Optional)</label>
+            <input type="file" class="section-image" accept="image/*" data-section="${sectionId}">
+            <div class="image-preview section-image-preview" id="preview-${sectionId}" ${data?.image ? 'style="display:block;"' : ''}>
+              <img src="${data?.image || ''}" alt="Section image preview">
+            </div>
+          </div>
+
+          <div class="keypair-container">
+            <div class="keypair-header">
+              <label>Key-Value Pairs (Optional)</label>
+              <button type="button" class="add-keypair-btn" onclick="window.addKeypair('${sectionId}')">
+                ➕ Add Pair
+              </button>
+            </div>
+            <div class="keypairs-list" id="keypairs-${sectionId}">
+            </div>
+          </div>
+        </div>
+      `;
+      
+      sectionsContainer.appendChild(sectionCard);
+
+      // Add image preview handler
+      const imageInput = sectionCard.querySelector('.section-image');
+      imageInput.addEventListener('change', (e) => {
+        const preview = document.getElementById(`preview-${sectionId}`);
+        previewImage(e, preview);
+      });
+
+      // Load keypairs if editing
+      if (data?.keypairs) {
+        data.keypairs.forEach(kp => {
+          window.addKeypair(sectionId, kp.key, kp.value);
+        });
+      }
+    }
+
+    window.removeSection = function(sectionId) {
+      const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+      if (section) {
+        section.remove();
+        renumberSections();
+      }
+    };
+
+    function renumberSections() {
+      const sections = sectionsContainer.querySelectorAll('.section-card');
+      sections.forEach((section, index) => {
+        section.querySelector('.section-number').textContent = index + 1;
+      });
+    }
+
+    window.addKeypair = function(sectionId, key = '', value = '') {
+      const keypairsList = document.getElementById(`keypairs-${sectionId}`);
+      const keypairId = `kp-${Date.now()}-${Math.random()}`;
+      
+      const keypairItem = document.createElement('div');
+      keypairItem.className = 'keypair-item';
+      keypairItem.dataset.keypairId = keypairId;
+      
+      keypairItem.innerHTML = `
+        <input type="text" class="keypair-key" placeholder="Key" value="${key}">
+        <input type="text" class="keypair-value" placeholder="Value" value="${value}">
+        <button type="button" class="remove-keypair-btn" onclick="window.removeKeypair('${keypairId}')">
+          ✕
+        </button>
+      `;
+      
+      keypairsList.appendChild(keypairItem);
+    };
+
+    window.removeKeypair = function(keypairId) {
+      const keypair = document.querySelector(`[data-keypair-id="${keypairId}"]`);
+      if (keypair) {
+        keypair.remove();
+      }
+    };
+
+    const loadBlogs = () => {
+      const listRef = ref(db, 'blogs/');
+      onValue(listRef, snapshot => {
+        const data = snapshot.val();
+        blogsList.innerHTML = "";
+
+        if (data) {
+          const blogs = Object.entries(data);
+          blogCount.textContent = `${blogs.length} Blog${blogs.length !== 1 ? 's' : ''}`;
+
+          blogs.forEach(([id, blog]) => {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.innerHTML = `
+              <div class="item-card-header">
+                <div class="item-card-title">
+                  <h3>${blog.title || 'Untitled Blog'}</h3>
+                  <p>By ${blog.authorName || 'Unknown'}</p>
+                </div>
+                <div class="item-card-actions">
+                  <button class="icon-btn edit" data-id="${id}" data-type="blog" title="Edit">✏️</button>
+                  <button class="icon-btn delete" data-id="${id}" data-type="blog" title="Delete">🗑️</button>
+                </div>
+              </div>
+              <div class="item-card-details">
+                <div class="detail-item">
+                  <div class="detail-icon">📝</div>
+                  <div class="detail-text">
+                    <div class="detail-label">Sections</div>
+                    <div class="detail-value">${blog.sections?.length || 0} sections</div>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-icon">👤</div>
+                  <div class="detail-text">
+                    <div class="detail-label">Author</div>
+                    <div class="detail-value">${blog.authorName || 'Unknown'}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+            blogsList.appendChild(card);
+          });
+
+          attachEventHandlers();
+        } else {
+          blogCount.textContent = '0 Blogs';
+          blogsList.innerHTML = `
+            <div class="empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              <h3>No blogs yet</h3>
+              <p>Create your first blog post using the form</p>
+            </div>
+          `;
         }
+      });
+    };
+
+    const fillBlogForm = (id, blog) => {
+      blogEditingId.value = id;
+      blogFormTitle.textContent = 'Edit Blog';
+      blogFormBadge.textContent = 'EDITING';
+      blogFormBadge.classList.add('editing');
+      blogSubmitText.textContent = '💾 Update Blog';
+      blogCancelBtn.style.display = 'block';
+
+      blogForm.title.value = blog.title || '';
+      blogForm.authorName.value = blog.authorName || '';
+      blogForm.authorSummary.value = blog.authorSummary || '';
+
+      if (blog.mainImage) {
+        blogMainPreview.querySelector('img').src = blog.mainImage;
+        blogMainPreview.classList.add('show');
+      }
+
+      if (blog.authorImage) {
+        authorImagePreview.querySelector('img').src = blog.authorImage;
+        authorImagePreview.classList.add('show');
+      }
+
+      // Clear existing sections
+      sectionsContainer.innerHTML = '';
+      sectionCounter = 0;
+
+      // Load sections
+      if (blog.sections && blog.sections.length > 0) {
+        blog.sections.forEach(section => {
+          addContentSection(section);
+        });
+      }
+
+      blogMainImage.value = '';
+      authorImage.value = '';
+      blogForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const resetBlogForm = () => {
+      blogForm.reset();
+      blogEditingId.value = '';
+      blogFormTitle.textContent = 'Add New Blog';
+      blogFormBadge.textContent = 'NEW';
+      blogFormBadge.classList.remove('editing');
+      blogSubmitText.textContent = '💾 Save Blog';
+      blogCancelBtn.style.display = 'none';
+      blogMainImage.value = '';
+      authorImage.value = '';
+      blogMainPreview.classList.remove('show');
+      authorImagePreview.classList.remove('show');
+      sectionsContainer.innerHTML = '';
+      sectionCounter = 0;
+    };
+
+    blogCancelBtn.addEventListener('click', resetBlogForm);
+
+    blogForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      blogSubmitBtn.disabled = true;
+      const originalText = blogSubmitText.textContent;
+
+      try {
+        const editingId = blogEditingId.value;
+        const data = {
+          title: blogForm.title.value.trim(),
+          authorName: blogForm.authorName.value.trim(),
+          authorSummary: blogForm.authorSummary.value.trim(),
+          sections: []
+        };
+
+        // Collect sections
+        const sectionElements = sectionsContainer.querySelectorAll('.section-card');
+        for (const sectionEl of sectionElements) {
+          const heading = sectionEl.querySelector('.section-heading').value.trim();
+          const content = sectionEl.querySelector('.section-content').value.trim();
+          const imageInput = sectionEl.querySelector('.section-image');
+
+          let sectionImage = sectionEl.querySelector('.section-image-preview img').src;
+
+          if (imageInput.files[0]) {
+            blogSubmitText.textContent = '⏳ Uploading section image...';
+            sectionImage = await uploadToImgBB(imageInput.files[0]) || sectionImage;
+          }
+
+          const keypairs = [];
+          sectionEl.querySelectorAll('.keypair-item').forEach(kpEl => {
+            const key = kpEl.querySelector('.keypair-key').value.trim();
+            const value = kpEl.querySelector('.keypair-value').value.trim();
+            if (key && value) {
+              keypairs.push({ key, value });
+            }
+          });
+
+          data.sections.push({
+            heading,
+            content,
+            image: sectionImage,
+            keypairs
+          });
+        }
+
+        // Handle main image
+        if (blogMainImage.files[0]) {
+          blogSubmitText.textContent = '⏳ Uploading main image...';
+          data.mainImage = await uploadToImgBB(blogMainImage.files[0]);
+        } else if (editingId) {
+          const snapshot = await new Promise((resolve) => {
+            onValue(ref(db, `blogs/${editingId}`), resolve, { onlyOnce: true });
+          });
+          const existingData = snapshot.val();
+          if (existingData?.mainImage) data.mainImage = existingData.mainImage;
+        }
+
+        // Handle author image
+        if (authorImage.files[0]) {
+          blogSubmitText.textContent = '⏳ Uploading author image...';
+          data.authorImage = await uploadToImgBB(authorImage.files[0]);
+        } else if (editingId) {
+          const snapshot = await new Promise((resolve) => {
+            onValue(ref(db, `blogs/${editingId}`), resolve, { onlyOnce: true });
+          });
+          const existingData = snapshot.val();
+          if (existingData?.authorImage) data.authorImage = existingData.authorImage;
+        }
+
+        blogSubmitText.textContent = '⏳ Saving...';
+        if (editingId) {
+          await update(ref(db, `blogs/${editingId}`), data);
+        } else {
+          await push(ref(db, 'blogs/'), data);
+        }
+
+        resetBlogForm();
+        alert('✅ Blog saved successfully!');
+      } catch (error) {
+        console.error(error);
+        alert('❌ Failed to save blog. Please try again.');
+      } finally {
+        blogSubmitBtn.disabled = false;
+        blogSubmitText.textContent = originalText;
       }
     });
+
+    // Event Handlers
+    function attachEventHandlers() {
+      const editBtns = document.querySelectorAll('.icon-btn.edit');
+      const deleteBtns = document.querySelectorAll('.icon-btn.delete');
+
+      editBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const id = btn.dataset.id;
+          const type = btn.dataset.type;
+
+          if (type === 'tour') {
+            const listRef = ref(db, `tours/${id}`);
+            onValue(listRef, snapshot => {
+              const tour = snapshot.val();
+              if (tour) fillTourForm(id, tour);
+            }, { onlyOnce: true });
+          } else {
+            const listRef = ref(db, `blogs/${id}`);
+            onValue(listRef, snapshot => {
+              const blog = snapshot.val();
+              if (blog) fillBlogForm(id, blog);
+            }, { onlyOnce: true });
+          }
+        });
+      });
+
+      deleteBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          deleteId = btn.dataset.id;
+          deleteType = btn.dataset.type;
+          const itemName = btn.closest('.item-card-header').querySelector('h3').textContent;
+          deleteItemName.textContent = itemName;
+          deleteModal.classList.add('active');
+        });
+      });
+    }
 
     cancelDelete.addEventListener('click', () => {
       deleteModal.classList.remove('active');
       deleteId = null;
+      deleteType = null;
+    });
+
+    confirmDelete.addEventListener('click', async () => {
+      if (deleteId && deleteType) {
+        try {
+          const path = deleteType === 'tour' ? `tours/${deleteId}` : `blogs/${deleteId}`;
+          await remove(ref(db, path));
+          deleteModal.classList.remove('active');
+          alert('✅ Item deleted successfully!');
+        } catch (error) {
+          console.error(error);
+          alert('❌ Failed to delete item.');
+        }
+      }
     });
 
     deleteModal.addEventListener('click', (e) => {
       if (e.target === deleteModal) {
         deleteModal.classList.remove('active');
-        deleteId = null;
       }
     });
-
-    loadTours();
   </script>
 </body>
 
