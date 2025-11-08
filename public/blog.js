@@ -32,10 +32,12 @@ function renderBlog(blogData) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('blog-container').style.display = 'block';
 
-    // Title and banner
+    // Title and meta
     document.getElementById('blog-title').textContent = blogData.title || 'Untitled Blog';
-    document.getElementById('banner-title').textContent = blogData.title || 'Blog Post';
     document.getElementById('blog-meta').textContent = `Posted on ${new Date().toLocaleDateString()}`;
+
+    // ✅ remove or comment this line unless you have element
+    // document.getElementById('banner-title').textContent = blogData.title || 'Blog Post';
 
     // Main image
     if (blogData.mainImage) {
@@ -43,12 +45,23 @@ function renderBlog(blogData) {
     }
 
     // Author
-    if (blogData.author) {
-        document.getElementById('author-name').textContent = blogData.author.name || 'Author';
-        document.getElementById('author-bio').textContent = blogData.author.bio || 'Author bio not available';
-        if (blogData.author.image) {
-            document.getElementById('author-image').src = blogData.author.image;
+    console.log("[INFO] Rendering author info", blogData.authorName);
+    if (blogData.authorName || blogData.authorSummary  || blogData.authorImage) {
+        console.log("[INFO] Author data:", blogData.author);
+        const nameEl = document.getElementById('author-name');
+        const bioEl = document.getElementById('author-bio');
+        const imgEl = document.getElementById('author-image');
+
+        nameEl.textContent = blogData.authorName || 'Author';
+        bioEl.textContent = blogData.authorSummary  || 'Author bio not available';
+        if (blogData.authorImage) {
+            imgEl.src = blogData.authorImage;
         }
+        console.log("[DEBUG] Author elements set:", {
+            name: nameEl.textContent,
+            bio: bioEl.textContent,
+            img: imgEl.src
+        });
     }
 
     // Blog sections
@@ -60,7 +73,6 @@ function renderBlog(blogData) {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'blog-content-section';
 
-            // Heading
             if (section.heading) {
                 const heading = document.createElement('h2');
                 heading.className = 'section-heading';
@@ -68,7 +80,6 @@ function renderBlog(blogData) {
                 sectionDiv.appendChild(heading);
             }
 
-            // Image
             if (section.image) {
                 const img = document.createElement('img');
                 img.className = 'section-image';
@@ -77,7 +88,6 @@ function renderBlog(blogData) {
                 sectionDiv.appendChild(img);
             }
 
-            // Content
             if (section.content) {
                 const content = document.createElement('div');
                 content.className = 'section-content';
@@ -85,11 +95,9 @@ function renderBlog(blogData) {
                 sectionDiv.appendChild(content);
             }
 
-            // Key-Value pairs
             if (section.keyValuePairs && typeof section.keyValuePairs === 'object') {
                 const detailsDiv = document.createElement('div');
                 detailsDiv.className = 'section-details';
-
                 Object.entries(section.keyValuePairs).forEach(([key, value]) => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'detail-item';
@@ -99,7 +107,6 @@ function renderBlog(blogData) {
                     `;
                     detailsDiv.appendChild(itemDiv);
                 });
-
                 sectionDiv.appendChild(detailsDiv);
             }
 
@@ -133,6 +140,7 @@ async function loadBlog() {
 
         if (snapshot.exists()) {
             const blogData = snapshot.val();
+            console.log("[INFO] Fetched blog data:", blogData);
             renderBlog(blogData);
         } else {
             showError(`Blog with ID "${blogId}" not found.`);
