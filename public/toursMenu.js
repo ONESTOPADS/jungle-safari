@@ -11,147 +11,195 @@ const firebaseConfig = {
   messagingSenderId: "281070360249",
   appId: "1:281070360249:web:2b9ce67d7af5b7415e2d68",
   measurementId: "G-TBMB0R0ED6",
-}
+};
 
 // ✅ Initialize Firebase
-const app = initializeApp(firebaseConfig)
-const db = getDatabase(app)
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// ✅ Fetch and display tours dynamically
+// ✅ Fetch and display tours dynamically (menu)
 document.addEventListener("DOMContentLoaded", () => {
-  const blogMenu = document.getElementById("blog-menu")
-  if (!blogMenu) return
+  const blogMenu = document.getElementById("blog-menu");
+  if (!blogMenu) return;
 
-  const toursRef = ref(db, "tours/")
+  const toursRef = ref(db, "tours/");
 
   onValue(toursRef, (snapshot) => {
-    const data = snapshot.val()
-    blogMenu.innerHTML = ""
+    const data = snapshot.val();
+    blogMenu.innerHTML = "";
 
     if (!data) {
-      blogMenu.innerHTML = `<li><a href="#">No tours available</a></li>`
-      return
+      blogMenu.innerHTML = `<li><a href="#">No tours available</a></li>`;
+      return;
     }
 
     Object.entries(data).forEach(([key, tour]) => {
-      const title = tour.title || "Untitled Tour"
-      const li = document.createElement("li")
-      const a = document.createElement("a")
-      a.textContent = title
-      a.href = `tourblog.html?id=${key}`
-      li.appendChild(a)
-      blogMenu.appendChild(li)
-    })
-  })
-})
+      const title = tour.title || "Untitled Tour";
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.textContent = title;
+      a.href = `tourblog.html?id=${key}`;
+      li.appendChild(a);
+      blogMenu.appendChild(li);
+    });
+  });
+});
 
+// ✅ Fetch and display blogs dynamically (menu)
 document.addEventListener("DOMContentLoaded", () => {
-  const blogNavMenu = document.getElementById("blog-menu-2")
-  if (!blogNavMenu) return
+  const blogNavMenu = document.getElementById("blog-menu-2");
+  if (!blogNavMenu) return;
 
-  const blogsRef = ref(db, "blogs/")
+  const blogsRef = ref(db, "blogs/");
 
   onValue(blogsRef, (snapshot) => {
-    const data = snapshot.val()
-    blogNavMenu.innerHTML = ""
+    const data = snapshot.val();
+    blogNavMenu.innerHTML = "";
 
     if (!data) {
-      blogNavMenu.innerHTML = `<li><a href="#">No blogs available</a></li>`
-      return
+      blogNavMenu.innerHTML = `<li><a href="#">No blogs available</a></li>`;
+      return;
     }
 
     Object.entries(data).forEach(([key, blog]) => {
-      const title = blog.title || "Untitled Blog"
-      const li = document.createElement("li")
-      const a = document.createElement("a")
-      a.textContent = title
-      a.href = `blog.html?id=${key}`
-      li.appendChild(a)
-      blogNavMenu.appendChild(li)
-    })
-  })
-})
+      const title = blog.title || "Untitled Blog";
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.textContent = title;
+      a.href = `blog.html?id=${key}`;
+      li.appendChild(a);
+      blogNavMenu.appendChild(li);
+    });
+  });
+});
 
-const toursContainer = document.getElementById("toursContainer")
+// ✅ Tours Section – Display horizontally with sliding
+// ✅ Tours Section – Display horizontally with sliding
+const toursContainer = document.getElementById("toursContainer");
 
 onValue(ref(db, "tours/"), (snapshot) => {
-  const data = snapshot.val()
-  if (!data) return
+  const data = snapshot.val();
+  if (!data || !toursContainer) return;
 
-  toursContainer.innerHTML = ""
+  // ✅ Clear and recreate carousel wrapper
+  toursContainer.innerHTML = `<div class="owl-carousel tours-carousel"></div>`;
+  const carousel = toursContainer.querySelector(".tours-carousel");
 
   Object.entries(data).forEach(([id, tour]) => {
-    const card = document.createElement("div")
-    card.className = "single-destination item"
+    const card = document.createElement("div");
+    card.className = "single-destination item";
 
     card.innerHTML = `
-            <div class="thumb">
-                <a href="tourblog.html?id=${id}">
-                    <img class="img-fluid" src="${tour.imageLink || "img/default.jpg"}" alt="${tour.title}">
-                </a>
-            </div>
-            <div class="details text-center">
-                <h4><a href="tourblog.html?id=${id}">${tour.title}</a></h4>
-            </div>
-        `
-    toursContainer.appendChild(card)
-  })
+      <div class="thumb">
+        <a href="tourblog.html?id=${id}">
+          <img class="img-fluid" src="${tour.imageLink || "img/default.jpg"}" alt="${tour.title}">
+        </a>
+      </div>
+      <div class="details text-center">
+        <h4><a href="tourblog.html?id=${id}">${tour.title}</a></h4>
+      </div>
+    `;
+    carousel.appendChild(card);
+  });
 
-  if ($(toursContainer).find(".owl-carousel").hasClass("owl-loaded")) {
-    $(toursContainer).find(".owl-carousel").trigger("destroy.owl.carousel")
-    $(toursContainer).find(".owl-carousel").removeClass("owl-loaded")
-    $(toursContainer).find(".owl-carousel").find(".owl-stage-outer").children().unwrap()
+  // ✅ Destroy existing Owl Carousel cleanly before initializing new
+  const $carousel = $(carousel);
+  if ($carousel.hasClass("owl-loaded")) {
+    $carousel.trigger("destroy.owl.carousel");
+    $carousel.removeClass("owl-loaded");
+    $carousel.find(".owl-stage-outer").children().unwrap();
   }
 
-  $(toursContainer)
-    .find(".owl-carousel")
-    .owlCarousel({
-      loop: true,
-      margin: 30,
-      nav: true,
-      dots: true,
-      autoplay: true,
-      autoplayTimeout: 3000,
-      autoplayHoverPause: true,
-      responsive: {
-        0: { items: 1 },
-        600: { items: 2 },
-        1000: { items: 3 },
-      },
-    })
-})
+  // ✅ Initialize Owl Carousel (horizontal single-row slide)
+  $carousel.owlCarousel({
+    loop: true,
+    margin: 30,
+    // nav: true,
+    dots: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    autoplayHoverPause: true,
+    responsive: {
+      0: { items: 1 },
+      600: { items: 2 },
+      1000: { items: 3 },
+    },
+  });
+});
 
-const blogsContainer = document.getElementById("blogsContainer")
+// ✅ Blogs Section
+const blogsContainer = document.getElementById("blogsContainer");
 
 if (blogsContainer) {
   onValue(ref(db, "blogs/"), (snapshot) => {
-    const data = snapshot.val()
-    if (!data) return
+    const data = snapshot.val();
+    if (!data) return;
 
-    blogsContainer.innerHTML = ""
+    blogsContainer.innerHTML = "";
 
     Object.entries(data).forEach(([id, blog]) => {
-      const card = document.createElement("div")
-      card.className = "blog-card item"
+      const fullText = blog.authorSummary || "No description available.";
+      const words = fullText.split(" ");
+      const shortText =
+        words.length > 20 ? words.slice(0, 20).join(" ") + "..." : fullText; // ✅ limit to 20 words
+
+      const card = document.createElement("div");
+      card.className = "single-recent-blog-post item";
 
       card.innerHTML = `
-                <div class="blog-thumb">
-                    <a href="blog.html?id=${id}">
-                        <img class="img-fluid" src="${blog.authorImage || "img/default.jpg"}" alt="${blog.title}">
-                    </a>
-                </div>
-                <div class="blog-details text-center">
-                    <h4><a href="blog.html?id=${id}">${blog.title}</a></h4>
-                    <p class="author">${blog.authorName || "Anonymous"}</p>
-                </div>
-            `
-      blogsContainer.appendChild(card)
-    })
+        <div class="thumb">
+          <a href="blog.html?id=${id}">
+            <img class="img-fluid" src="${blog.mainImage || "img/default.jpg"}" alt="${blog.title}">
+          </a>
+        </div>
+        <div class="details">
+          <div class="tags">
+            <ul>
+              <li><a href="#">${blog.category1 || "General"}</a></li>
+              ${blog.category2 ? `<li><a href="#">${blog.category2}</a></li>` : ""}
+            </ul>
+          </div>
+          <a href="blog.html?id=${id}">
+            <h4 class="title">${blog.title || "Untitled Blog"}</h4>
+          </a>
+          <p class="blog-summary" data-full="${fullText}">
+            ${shortText}
+            ${words.length > 20 ? `<span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>` : ""}
+          </p>
+        </div>
+      `;
 
+      blogsContainer.appendChild(card);
+    });
+
+    // ✅ Add event listener for Show more / Show less
+    blogsContainer.querySelectorAll(".show-more").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const p = e.target.closest(".blog-summary");
+        const fullText = p.getAttribute("data-full");
+        const currentText = p.textContent.replace("Show less", "").replace("Show more", "").trim();
+
+        if (currentText.endsWith("...")) {
+          p.innerHTML = `${fullText} <span class="show-more" style="color:#007bff; cursor:pointer;">Show less</span>`;
+        } else {
+          const words = fullText.split(" ");
+          const shortText =
+            words.length > 20 ? words.slice(0, 20).join(" ") + "..." : fullText;
+          p.innerHTML = `${shortText} ${
+            words.length > 20 ? `<span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>` : ""
+          }`;
+        }
+
+        // rebind event after toggle
+        p.querySelector(".show-more")?.addEventListener("click", arguments.callee);
+      });
+    });
+
+    // ✅ Initialize Owl Carousel (horizontal sliding)
     if ($(blogsContainer).find(".blog-carousel").hasClass("owl-loaded")) {
-      $(blogsContainer).find(".blog-carousel").trigger("destroy.owl.carousel")
-      $(blogsContainer).find(".blog-carousel").removeClass("owl-loaded")
-      $(blogsContainer).find(".blog-carousel").find(".owl-stage-outer").children().unwrap()
+      $(blogsContainer).find(".blog-carousel").trigger("destroy.owl.carousel");
+      $(blogsContainer).find(".blog-carousel").removeClass("owl-loaded");
+      $(blogsContainer).find(".blog-carousel").find(".owl-stage-outer").children().unwrap();
     }
 
     $(blogsContainer)
@@ -169,6 +217,6 @@ if (blogsContainer) {
           600: { items: 2 },
           1000: { items: 3 },
         },
-      })
-  })
+      });
+  });
 }
