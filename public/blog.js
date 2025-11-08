@@ -34,7 +34,7 @@ function renderBlog(blogData) {
 
     // Title and meta
     document.getElementById('blog-title').textContent = blogData.title || 'Untitled Blog';
-    document.getElementById('blog-meta').textContent = `Posted on ${new Date().toLocaleDateString()}`;
+    // document.getElementById('blog-meta').textContent = `Posted on ${new Date().toLocaleDateString()}`;
 
     // ✅ remove or comment this line unless you have element
     // document.getElementById('banner-title').textContent = blogData.title || 'Blog Post';
