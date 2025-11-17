@@ -135,16 +135,19 @@ if (blogsContainer) {
     const data = snapshot.val();
     if (!data) return;
 
-    blogsContainer.innerHTML = "";
+    // Create proper carousel wrapper
+    blogsContainer.innerHTML = `<div class="owl-carousel blog-carousel"></div>`;
+    const carousel = blogsContainer.querySelector(".blog-carousel");
 
+    // Build cards
     Object.entries(data).forEach(([id, blog]) => {
       const fullText = blog.authorSummary || "No description available.";
       const words = fullText.split(" ");
       const shortText =
-        words.length > 20 ? words.slice(0, 20).join(" ") + "..." : fullText; // ✅ limit to 20 words
+        words.length > 20 ? words.slice(0, 20).join(" ") + "..." : fullText;
 
       const card = document.createElement("div");
-      card.className = "single-recent-blog-post item";
+      card.className = "single-destination item";
 
       card.innerHTML = `
         <div class="thumb">
@@ -164,59 +167,58 @@ if (blogsContainer) {
           </a>
           <p class="blog-summary" data-full="${fullText}">
             ${shortText}
-            ${words.length > 20 ? `<span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>` : ""}
+            ${
+              words.length > 20
+                ? `<span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>`
+                : ""
+            }
           </p>
         </div>
       `;
 
-      blogsContainer.appendChild(card);
+      carousel.appendChild(card);
     });
 
-    // ✅ Add event listener for Show more / Show less
+    // Show more / less
     blogsContainer.querySelectorAll(".show-more").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+      btn.addEventListener("click", function toggle(e) {
         const p = e.target.closest(".blog-summary");
         const fullText = p.getAttribute("data-full");
-        const currentText = p.textContent.replace("Show less", "").replace("Show more", "").trim();
+        const words = fullText.split(" ");
 
-        if (currentText.endsWith("...")) {
+        if (p.textContent.includes("...")) {
           p.innerHTML = `${fullText} <span class="show-more" style="color:#007bff; cursor:pointer;">Show less</span>`;
         } else {
-          const words = fullText.split(" ");
           const shortText =
             words.length > 20 ? words.slice(0, 20).join(" ") + "..." : fullText;
-          p.innerHTML = `${shortText} ${
-            words.length > 20 ? `<span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>` : ""
-          }`;
+          p.innerHTML = `${shortText} <span class="show-more" style="color:#007bff; cursor:pointer;">Show more</span>`;
         }
-
-        // rebind event after toggle
-        p.querySelector(".show-more")?.addEventListener("click", arguments.callee);
+        p.querySelector(".show-more").addEventListener("click", toggle);
       });
     });
 
-    // ✅ Initialize Owl Carousel (horizontal sliding)
-    if ($(blogsContainer).find(".blog-carousel").hasClass("owl-loaded")) {
-      $(blogsContainer).find(".blog-carousel").trigger("destroy.owl.carousel");
-      $(blogsContainer).find(".blog-carousel").removeClass("owl-loaded");
-      $(blogsContainer).find(".blog-carousel").find(".owl-stage-outer").children().unwrap();
+    // Destroy old instance safely
+    if ($(carousel).hasClass("owl-loaded")) {
+      $(carousel).trigger("destroy.owl.carousel");
+      $(carousel).removeClass("owl-loaded");
+      $(carousel).find(".owl-stage-outer").children().unwrap();
     }
 
-    $(blogsContainer)
-      .find(".blog-carousel")
-      .owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: true,
-        dots: true,
-        autoplay: true,
-        autoplayTimeout: 3000,
-        autoplayHoverPause: true,
-        responsive: {
-          0: { items: 1 },
-          600: { items: 2 },
-          1000: { items: 3 },
-        },
-      });
+    // Initialize sliding carousel
+    $(carousel).owlCarousel({
+      loop: true,
+      margin: 30,
+      // nav: true,
+      dots: true,
+      autoplay: true,
+      autoplayTimeout: 3000,
+      autoplayHoverPause: true,
+      responsive: {
+        0: { items: 1 },
+        600: { items: 2 },
+        1000: { items: 3 }
+      }
+    });
   });
 }
+
